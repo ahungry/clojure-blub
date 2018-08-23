@@ -3,10 +3,14 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/core.typed "0.4.3"]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [gnl/ghostwheel "0.2.3"]
                  [clj-http "3.7.0"]
                  [clojure-lanterna "0.9.7"]]
+  :injections []
   :main ^:skip-aot blub.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles
+  {
+   :dev {:dependencies [[org.clojure/test.check "0.9.0"]]}
+   :uberjar {:aot :all}})
