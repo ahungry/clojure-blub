@@ -89,7 +89,8 @@
 (stest/check `addition)
 
 ;; Test all the things
-;; (defn test-all [] (-> (stest/enumerate-namespace 'blub.core) stest/check))
+(defn test-all [] (-> (stest/enumerate-namespace 'blub.core) stest/check))
+(test-all)
 
 (defn add [a b]
   (+ a b))
