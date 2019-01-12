@@ -130,3 +130,58 @@
 ;; (s/get-key-blocking scr)
 
 ;; (s/stop scr)
+
+;; Business logic
+;; Get a user based on matching id.
+;; If they're over 18, and favorite language is this one,
+;; then send them a job offer invite.
+(defrecord UserModel [name age id language])
+
+(s/def ::positive-int (s/and int? #(> % 0)))
+(s/def ::full-string (s/and string? #(> (count %) 0)))
+(s/def ::name ::full-string)
+(s/def ::age ::positive-int)
+(s/def ::id ::positive-int)
+(s/def ::language ::full-string)
+(s/def ::user-model (s/keys :req-un [::name ::age ::id ::language ]))
+
+(defn get-user-model
+  "Get a valid instance of the record.  Throws message such as:
+
+  In: [:id] val: -1 fails spec: :blub.core/positive-int at: [:id] predicate: (> % 0)
+
+  on failure."
+  [name age id language]
+  (let [model (->UserModel name age id language)]
+    (if (s/valid? ::user-model model) model
+        (throw (Throwable. (str (s/explain ::user-model model)))))))
+
+;; conform, explain, valid?
+(s/valid? ::user-model (->UserModel "Carter" 36 2 "Clojure"))
+
+(defn get-users [_id]
+  [(->UserModel "Carter" 36 2 "Clojure")])
+
+(defmulti adult-user? class)
+(defmethod adult-user? UserModel [{:keys [age]}]
+  (> age 18))
+
+(defn adult? [{:keys [age]}]
+  (> age 18))
+
+(defn language-fan? [{:keys [language]}]
+  (= language "Clojure"))
+
+(defn job-offer [{:keys [name]}]
+  (str "Job offer for: " name " (imagine an email is sent now)."))
+
+(defn emailer! [s]
+  (str "Email is being sent: " s))
+
+(defn acquire-candidate-by-id-maybe-hiring! [id]
+  (some->> (get-users 2)
+           (filter adult?)
+           (filter language-fan?)
+           (map job-offer)
+           (map emailer!)
+           ))
