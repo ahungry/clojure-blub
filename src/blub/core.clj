@@ -30,7 +30,7 @@
 ;; https://clojure.org/guides/spec
 (def email-regex #".*@.*")
 (defn email-type-gen []
-  (gen/fmap #(str % "@ahungry.com") (gen/string-alphanumeric)))
+  (gen/fmap #(str "m+" % "@ahungry.com") (gen/string-alphanumeric)))
 
 (s/def ::email-type
   (s/with-gen (s/and string? #(re-matches email-regex %))
@@ -57,7 +57,22 @@
 (s/def ::person (s/keys :req [::first-name ::last-name ::email]
                         :opt [::phone]))
 
+(s/def ::business (s/keys :req [::email ::phone]))
+(s/def ::businesses (s/coll-of ::business :into [] :count 1))
+(s/def ::businessesx (s/every ::business :into [] :max-count 5 :min-count 1))
+
+(s/def ::customer (s/keys :req [::person ::business]))
+
 (gen/generate (s/gen ::person))
+
+(defn sample-person []
+  (gen/sample (s/gen ::person)))
+
+(defn sample-business []
+  (gen/sample (s/gen ::business)))
+
+(defn sample-customer []
+  (gen/sample (s/gen ::customer)))
 
 (s/valid? ::person
           {::first-name "Matthew"
