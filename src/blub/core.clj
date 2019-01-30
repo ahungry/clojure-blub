@@ -83,6 +83,15 @@
   (s/keys :req-un [::first-name ::last-name ::email]
           :opt-un [::phone]))
 
+(s/def :unq/business
+  (s/keys :req-un [::email ::phone]))
+(s/def :unq/businesses (s/coll-of :unq/business :into [] :count 1))
+
+(s/def :unq/customer (s/keys :req-un [:unq/person :unq/businesses]))
+
+(defn unq-sample-customer []
+  (gen/sample (s/gen :unq/customer)))
+
 (s/conform :unq/person
            {:first-name "Matthew"
             :last-name "Carter"
