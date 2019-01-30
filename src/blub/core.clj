@@ -92,6 +92,9 @@
 (defn unq-sample-customer []
   (gen/sample (s/gen :unq/customer)))
 
+(defn unq-generate-customer []
+  (gen/generate (s/gen :unq/customer)))
+
 (s/conform :unq/person
            {:first-name "Matthew"
             :last-name "Carter"
