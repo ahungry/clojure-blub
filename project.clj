@@ -3,9 +3,10 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.9.0"]
+  :dependencies [[org.clojure/clojure "1.10.0"]
                  [gnl/ghostwheel "0.2.3"]
                  [clj-http "3.7.0"]
+                 [nrepl "0.4.5"]
                  [clojure-lanterna "0.9.7"]]
   :injections []
   :main ^:skip-aot blub.core

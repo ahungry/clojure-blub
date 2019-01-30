@@ -29,15 +29,35 @@
 
 ;; https://clojure.org/guides/spec
 (def email-regex #".*@.*")
-(s/def ::email-type (s/and string? #(re-matches email-regex %)))
+(defn email-type-gen []
+  (gen/fmap #(str % "@ahungry.com") (gen/string-alphanumeric)))
+
+(s/def ::email-type
+  (s/with-gen (s/and string? #(re-matches email-regex %))
+    email-type-gen))
+
+(gen/generate (s/gen ::email-type))
+(gen/sample (s/gen ::email-type))
 
 (s/def ::acctid int?)
 (s/def ::first-name string?)
 (s/def ::last-name string?)
 (s/def ::email ::email-type)
 
+(defn phone-type-gen []
+  (gen/fmap #(read-string (str "555555" %))
+            (s/gen (set (map #(+ 1000 %) (range 9999))))))
+(s/def ::phone
+  (s/with-gen
+    (s/and int?
+           #(> % 1000000000)
+           #(< % 9999999999))
+    phone-type-gen))
+
 (s/def ::person (s/keys :req [::first-name ::last-name ::email]
                         :opt [::phone]))
+
+(gen/generate (s/gen ::person))
 
 (s/valid? ::person
           {::first-name "Matthew"
