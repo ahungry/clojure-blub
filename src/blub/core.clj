@@ -232,3 +232,16 @@
            (map job-offer)
            (map emailer!)
            ))
+
+(defn process-file [filename f]
+  (with-open [reader (clojure.java.io/reader filename)]
+    (doseq [line (line-seq reader)]
+      (-> line
+          ;; You could use (read-string) IF you wanted side effects from data.
+          ;; It will also error out on empty lines.  This format is better for
+          ;; moving around objects over EDN.
+          (clojure.edn/read-string)
+          f))))
+
+(defn edn-file-print []
+  (process-file "test.edn" #(prn (:x %))))
