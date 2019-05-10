@@ -245,3 +245,11 @@
 
 (defn edn-file-print []
   (process-file "test.edn" #(prn (:x %))))
+
+(defn hilo []
+  (let [number (rand-int 10)]
+    ((fn [times]
+       (let [i (read)]
+         (cond (= i number) (do (prn (format "You win in %s guessess!" times)) )
+               (> i number) (do (prn "Lower") (recur (inc times)))
+               (< i number) (do (prn "Higher") (recur (inc times)))))) 0)))
