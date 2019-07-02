@@ -247,7 +247,11 @@
 (defn edn-file-print []
   (process-file "test.edn" #(prn (:x %))))
 
-(s/valid? :mt/vendor {:vid "878812345678" :dba "My Business"}) ; true
+;; Refer to it fully qualified
+(s/valid? :blub.my-types/vendor {:vid "444412345678" :dba "My Business"}) ; true
+
+;; Refer to it aliased
+(s/valid? ::mt/vendor {:vid "444412345678" :dba "My Business"}) ; true
 
 (defn hilo []
   (let [number (rand-int 10)]
