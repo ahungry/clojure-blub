@@ -247,4 +247,12 @@
 (defn edn-file-print []
   (process-file "test.edn" #(prn (:x %))))
 
-(s/valid? :mt/merchant {:mid "878812345678" :dba "My Business"}) ; true
+(s/valid? :mt/vendor {:vid "878812345678" :dba "My Business"}) ; true
+
+(defn hilo []
+  (let [number (rand-int 10)]
+    ((fn [times]
+       (let [i (read)]
+         (cond (= i number) (do (prn (format "You win in %s guessess!" times)) )
+               (> i number) (do (prn "Lower") (recur (inc times)))
+               (< i number) (do (prn "Higher") (recur (inc times)))))) 0)))
