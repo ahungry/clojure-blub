@@ -30,6 +30,18 @@
      :accept total
      :reject (- (count metrics) total)}))
 
+(defn get-reduced-field [xs key] (reduce + (map key xs)))
+
+(defn get-aggregate-stats [stats]
+  (let [f (partial get-reduced-field stats)
+        total (f :total)
+        accept (f :accept)
+        reject (f :reject)]
+    {:mean (/ total accept)
+     :total total
+     :accept accept
+     :reject reject}))
+
 (defn -main []
   (->> (get-text)
        parse-file
