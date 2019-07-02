@@ -6,6 +6,7 @@
                     :num-tests 10}
   ;; (:require [clojure.core.typed :as t])
   ;; (:require [clojure.core.typed :as t :refer [ann check-ns]])
+  (:require [blub.my-types :as mt])
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.spec.gen.alpha :as gen])
   (:require [clojure.spec.test.alpha :as stest])
@@ -245,3 +246,5 @@
 
 (defn edn-file-print []
   (process-file "test.edn" #(prn (:x %))))
+
+(s/valid? :mt/merchant {:mid "878812345678" :dba "My Business"}) ; true
