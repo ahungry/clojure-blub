@@ -260,3 +260,10 @@
          (cond (= i number) (do (prn (format "You win in %s guessess!" times)) )
                (> i number) (do (prn "Lower") (recur (inc times)))
                (< i number) (do (prn "Higher") (recur (inc times)))))) 0)))
+
+;; With transduce, they run the comps in natural order, fg = g(f)
+(def xform
+  (comp
+   (filter odd?)
+   (map #(* 2 %))))
+(transduce xform conj (range 0 10)) ; 3 5 7 9 11
