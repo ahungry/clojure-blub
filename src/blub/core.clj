@@ -12,6 +12,8 @@
   (:require [clojure.spec.test.alpha :as stest])
   (:require [ghostwheel.core :as g
              :refer [>defn >defn- >fdef => | <- ?]])
+  (:require
+   [cheshire.core :as json])
   (:gen-class))
 
 ;; https://clojure.org/about/spec
@@ -267,3 +269,31 @@
    (filter odd?)
    (map #(* 2 %))))
 (transduce xform conj (range 0 10)) ; 3 5 7 9 11
+
+;; clojure.spec is a much better way to do this, but this will suffice for a simpler sample
+(defn is-ip-format? [s] (re-find #"^\d+\.\d+\.\d+\.\d+" s))
+(defn -assert [message] #(when (not %) (throw (Throwable. message))))
+(def assert-ip-format (comp (-assert "Invalid IP format") is-ip-format?))
+
+(defn get-ip []
+  (slurp "http://httpbin.org/delay/10"))
+
+(defn fake-response [] "{\"origin\": \"xxx\"}")
+
+;; This could probably be a bit more readable with an actual promise or something.
+(defn get-ip-with-timeout []
+  (let [response (atom nil)]
+    (future (Thread/sleep 1e3)
+            (reset! response (fake-response)))
+    (future  (reset! response (get-ip)))
+    (while (= nil @response) (Thread/sleep 100))
+    @response))
+
+(defn make-ip-model [json ]
+  (let [tmp (json/parse-string json)
+        ip (get tmp "origin")]
+    (assert-ip-format ip)
+    {:ip ip}))
+
+(def get-ip-model (comp make-ip-model get-ip-with-timeout))
+(get-ip-model)
