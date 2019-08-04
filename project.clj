@@ -10,6 +10,7 @@
                  [clj-http "3.7.0"]
                  [cheshire "5.8.1"]
                  [slingshot "0.12.2"]
+                 [udp-wrapper "0.1.1"]
                  ;; readability things
                  [io.aviso/pretty "0.1.37"]
                  [expound "0.7.2"]

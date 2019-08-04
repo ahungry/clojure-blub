@@ -13,7 +13,8 @@
   (:require [ghostwheel.core :as g
              :refer [>defn >defn- >fdef => | <- ?]])
   (:require
-   [cheshire.core :as json])
+   [cheshire.core :as json]
+   [udp-wrapper.core :as udp])
   (:gen-class))
 
 ;; https://clojure.org/about/spec
@@ -297,3 +298,26 @@
 
 (def get-ip-model (comp make-ip-model get-ip-with-timeout))
 (get-ip-model)
+
+;; Server stuff
+
+;; Listen on an IP for udp
+(defn start-udp []
+  (def socket (udp/create-udp-server 12346))
+
+  ;; Just print the received messages
+  (def my-future (udp/receive-loop socket (udp/empty-packet 512) println)))
+
+(defn stop-udp []
+  (future-cancel my-future)
+  (udp/close-udp-server socket))
+
+;; Client stuff
+(defn send-udp [s]
+  (let [socket (udp/create-udp-server 12347)
+        packet (udp/packet (udp/get-bytes-utf8 s)
+                           (udp/make-address "127.0.0.1")
+                           12345)]
+    (udp/send-message socket packet)
+    (udp/close-udp-server socket)
+    ))
