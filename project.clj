@@ -5,18 +5,34 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[io.aviso/pretty "0.1.37"]]
   :middleware [io.aviso.lein-pretty/inject]
-  :dependencies [[org.clojure/clojure "1.10.0"]
+  :dependencies [
+                 ;; Language related
+                 [org.clojure/clojure "1.10.0"]
+                 [clojure.java-time "0.3.2"]
+
+                 ;; Type related
                  [gnl/ghostwheel "0.2.3"]
+
+                 ;; Util related
                  [clj-http "3.7.0"]
-                 [cheshire "5.8.1"]
+                 [cheshire "5.9.0"]
                  [slingshot "0.12.2"]
+
+                 ;;  Network related
                  [udp-wrapper "0.1.1"]
+
                  ;; readability things
                  [io.aviso/pretty "0.1.37"]
                  [expound "0.7.2"]
-                 ;; end rt
+
+                 ;; Logging related
+                 [ch.qos.logback/logback-classic "1.2.3"]
+                 [org.clojure/tools.logging "0.5.0"]
+
+                 ;; Probably not even needed
                  [nrepl "0.4.5"]
-                 [clojure-lanterna "0.9.7"]]
+                 [clojure-lanterna "0.9.7"]
+                 ]
   :injections []
   :main ^:skip-aot blub.core
   :target-path "target/%s"
