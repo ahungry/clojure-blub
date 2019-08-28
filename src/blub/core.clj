@@ -321,3 +321,17 @@
     (udp/send-message socket packet)
     (udp/close-udp-server socket)
     ))
+
+;; Scenario:
+;; You need to make 100 'API calls' and aggregate the data, with logging,
+;; and the final evaluation result being the properly ordered return set.
+(def my-data-log (atom []))
+
+(defn fetch-data! [n]
+  (Thread/sleep 1e3)
+  (swap! my-data-log conj (str "Fetched record: " n)) n)
+
+(defn get-data []
+  (pmap fetch-data! (range 100)))
+
+(time (doall (get-data)))
