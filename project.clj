@@ -8,6 +8,7 @@
   :dependencies [
                  ;; Language related
                  [org.clojure/clojure "1.10.0"]
+                 [org.clojure/core.async "0.4.500"]
                  [clojure.java-time "0.3.2"]
 
                  ;; Type related
