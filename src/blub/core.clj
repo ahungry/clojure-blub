@@ -297,7 +297,7 @@
     {:ip ip}))
 
 (def get-ip-model (comp make-ip-model get-ip-with-timeout))
-(get-ip-model)
+;; (get-ip-model)
 
 ;; Server stuff
 
@@ -325,13 +325,26 @@
 ;; Scenario:
 ;; You need to make 100 'API calls' and aggregate the data, with logging,
 ;; and the final evaluation result being the properly ordered return set.
+(defn burner
+  "Burn up the CPU for almost exactly 1 second."
+  []
+  (def looped (atom 0))
+  (def start-time (System/nanoTime))
+  (while (< (System/nanoTime) (+ start-time 1e9))
+    (swap! looped inc))
+  looped)
+
 (def my-data-log (atom []))
 
 (defn fetch-data! [n]
-  (Thread/sleep 1e3)
+  ;; (Thread/sleep 1e3)
+  (burner)
   (swap! my-data-log conj (str "Fetched record: " n)) n)
 
 (defn get-data []
   (pmap fetch-data! (range 100)))
 
-(time (doall (get-data)))
+;; 4.x seconds
+(defn concurrency-test []
+  (time (doall (get-data)))
+  nil)
