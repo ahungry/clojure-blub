@@ -11,6 +11,9 @@
                  [org.clojure/core.async "0.4.500"]
                  [clojure.java-time "0.3.2"]
 
+                 ;; Config related
+                 [ahungry/xdg-rc "0.0.2"]
+
                  ;; Type related
                  [gnl/ghostwheel "0.2.3"]
 

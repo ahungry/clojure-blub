@@ -15,6 +15,8 @@
   (:require
    [cheshire.core :as json]
    [udp-wrapper.core :as udp])
+  (:require
+   [xdg-rc.core :as xdg-rc])
   (:gen-class))
 
 ;; https://clojure.org/about/spec
