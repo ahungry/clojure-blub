@@ -350,3 +350,33 @@
 (defn concurrency-test []
   (time (doall (get-data)))
   nil)
+
+
+
+;; This craziness is to read a file like page1.clj and eval it with string support
+(import '[java.io PushbackReader])
+(require '[clojure.java.io :as io])
+
+;; https://stackoverflow.com/questions/24922478/is-there-a-way-to-read-all-the-forms-in-a-clojure-file
+(defn read-all
+  [file]
+  (let [rdr (-> file io/file io/reader PushbackReader.)]
+    (loop [forms []]
+      (let [form (try (read rdr) (catch Exception e nil))]
+        (if form
+          (recur (conj forms form))
+          forms)))))
+
+(defn wrap-symbol [x]
+  (if (list? x)
+    (fn [] (with-out-str (eval x)))
+    (fn [] (with-out-str (prn  x)))))
+
+(defn clj->html [file]
+  (clojure.string/replace
+   (->> (read-all file)
+        (map wrap-symbol)
+        (map eval)
+        (map #(%))
+        (clojure.string/join ""))
+   #"\n" " "))

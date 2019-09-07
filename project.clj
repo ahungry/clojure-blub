@@ -10,6 +10,7 @@
                  [org.clojure/clojure "1.10.0"]
                  [org.clojure/core.async "0.4.500"]
                  [clojure.java-time "0.3.2"]
+                 [org.clojure/core.typed "0.6.0"]
 
                  ;; Config related
                  [ahungry/xdg-rc "0.0.2"]
@@ -37,7 +38,8 @@
                  [nrepl "0.4.5"]
                  [clojure-lanterna "0.9.7"]
                  ]
-  :injections []
+  :injections [(require 'clojure.core.typed)
+               [clojure.core.typed/install]]
   :main ^:skip-aot blub.core
   :target-path "target/%s"
   :profiles
