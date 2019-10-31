@@ -6,7 +6,10 @@
                     :num-tests 10}
   ;; (:require [clojure.core.typed :as t])
   ;; (:require [clojure.core.typed :as t :refer [ann check-ns]])
-  (:require [blub.my-types :as mt])
+  (:require
+   [blub.my-types :as mt]
+   [blub.events :as e]
+   )
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.spec.gen.alpha :as gen])
   (:require [clojure.spec.test.alpha :as stest])
@@ -302,17 +305,27 @@
 ;; (get-ip-model)
 
 ;; Server stuff
+(defn recv
+  "Show the received value."
+  [x]
+  ;; (prn (format "%02X or %X" x x))
+  (prn (map int x))
+  (prn (type x))
+  (prn x)
+  (println x))
 
 ;; Listen on an IP for udp
-(defn start-udp []
+(defn start-udp [& r]
   (def socket (udp/create-udp-server 12346))
 
   ;; Just print the received messages
-  (def my-future (udp/receive-loop socket (udp/empty-packet 512) println)))
+  (def my-future (udp/receive-loop socket (udp/empty-packet 512) #'recv)))
 
 (defn stop-udp []
   (future-cancel my-future)
   (udp/close-udp-server socket))
+
+(def restart-udp (comp start-udp stop-udp))
 
 ;; Client stuff
 (defn send-udp [s]
@@ -351,8 +364,6 @@
   (time (doall (get-data)))
   nil)
 
-
-
 ;; This craziness is to read a file like page1.clj and eval it with string support
 (import '[java.io PushbackReader])
 (require '[clojure.java.io :as io])
@@ -373,6 +384,7 @@
     (fn [] (with-out-str (prn  x)))))
 
 (defn clj->html [file]
+  (def request {:name "Jon Smith"})
   (clojure.string/replace
    (->> (read-all file)
         (map wrap-symbol)
@@ -380,3 +392,8 @@
         (map #(%))
         (clojure.string/join ""))
    #"\n" " "))
+
+(defn foo [x]
+  (def y x)
+  (def y (* y y))
+  (+ y x))

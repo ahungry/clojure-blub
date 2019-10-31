@@ -15,6 +15,9 @@
                  ;; Config related
                  [ahungry/xdg-rc "0.0.2"]
 
+                 ;; Tinkering
+                 [hiccup "1.0.5"]
+
                  ;; Type related
                  [gnl/ghostwheel "0.2.3"]
 
