@@ -397,3 +397,7 @@
   (def y x)
   (def y (* y y))
   (+ y x))
+
+(def tester {:x true :y false :z true})
+
+(filter #(% tester) (keys tester))
