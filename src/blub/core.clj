@@ -401,3 +401,22 @@
 (def tester {:x true :y false :z true})
 
 (filter #(% tester) (keys tester))
+
+(defn to-string-helper [xs n res]
+  (if (= 0 (count xs))
+    res
+    (recur (rest xs)
+           (inc n)
+           (str (first xs)
+                (if (and (> n 0 )
+                         (= 0 (mod n 3))) "," "") res))))
+
+(defn number-to-array [n res]
+  (if (= n 0)
+    (if (empty? res) [0] res)
+    (recur (quot n 10) (conj res (mod n 10)))))
+
+(defn to-string [n]
+  (str (if (> 0 n) "-" "")
+       (to-string-helper
+        (number-to-array (Math/abs n) []) 0 "")))
